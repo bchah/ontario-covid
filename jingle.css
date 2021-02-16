@@ -26,12 +26,12 @@ body {
   margin: auto;
   /* margin-bottom: 5%;
   margin-top: 2%; */
-  max-width: 90%;
+  max-width: 85%;
   transition: all .2s ease-in;
 }
 
 .contained {
-    border: 0.5px dotted white;
+    border: 1px dotted white;
     border-radius: 4px;
     padding: 0.8em;
     padding-top: 0.6em;
@@ -65,11 +65,11 @@ color: rgb(184, 0, 0);
 }
 
 a {
-  color: rgb(215, 195, 195)
+  color: rgb(142, 179, 223);
 }
 
 a:hover {
-  color: rgb(232, 166, 166)
+  color: rgba(213, 231, 252, 0.866);
 }
 
 .jumbotron {

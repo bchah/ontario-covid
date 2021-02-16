@@ -26,6 +26,12 @@ main {
     padding-top: 1em;
 }
 
+.logo {
+  filter: invert(100%);
+  width: 50px;
+  vertical-align: -20%;
+}
+
 .wrapper {
   margin: auto;
   /* margin-bottom: 5%;

@@ -2,27 +2,20 @@
 <html lang="en">
 
 <head>
+    <title>Ontario COVID Data</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.7, shrink-to-fit=no">
     <link rel="icon" href="./favicon.ico">
-
-    <title>Ontario COVID Data</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="jingle.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="covid.css" rel="stylesheet">
 </head>
 
 <body>
 
     <main role="main">
-
-        <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">
             <div class="wrapper">
-                <h1 id="title">Ontario COVID Data for </h1><br>
+               <h1 id="title"><object data="virus.svg" class="logo" type="image/svg+xml"></object> Ontario COVID Data for </h1><br>
             </div>
         </div>
         <div class="wrapper">
@@ -66,7 +59,7 @@
                     Total LTC Worker Deaths:<p class="stat" id="ltcHcwDeaths"></p>
                 </div>
             </div>
-        </div> <!-- /container -->
+        </div>
     </main>
 
     <footer class="wrapper">
@@ -75,15 +68,12 @@
             <br>&copy; 2021 Brian Chahley</small>
     </footer>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script>window.jQuery || document.write('<script src="jquery-3.5.1.min.js"><\/script>')</script>
-    <script src="papaparse.min.js"></script>
-    <script src="bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script>$(document).ready(() => {
 
-            // Add comma separators to numeric string, or return the string if it cant be parsed (already has commas)
+            // Add comma separators to numeric string, or return the string itself if it cant be parsed (already has commas)
             function fmt(string) {
                 let x = Number(string);
                 if (!isNaN(x)) {

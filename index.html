@@ -27,30 +27,31 @@
             </div>
         </div>
 
+
         <div class="container">
-            <div>
-                <h2>Yesterday's Numbers:</h2><br>
-                New Cases: <span class="stat" id="cases-inc"></span><br>
-                Tests:<span class="stat" id="tests"></span><br>
-                Percent Positive:<span class="stat" id="percent"></span>
+            <div class="contained">
+                <h2>Yesterday's Numbers</h2>
+                New Cases: <span class="stat cases-inc"></span><br>
+                Tests: <span class="stat" id="tests"></span><br>
+                Percent Positive: <span class="stat" id="percent"></span>
             </div>
-            <br><br>
-            <div class="row">
-                <div class="col-sm-3">
+            <br>
+            <div class="grid-container">
+                <div class="contained">
                     <h2>Cases</h2><br>
                     Positive Cases (<span class="delta" id="positive-inc"></span>):<p class="stat" id="positive"></p>
                     Resolved Cases (<span class="delta" id="resolved-inc"></span>):<p class="stat" id="resolved"></p>
                     Total Deaths (<span class="delta" id="deaths-inc"></span>):<p class="stat" id="deaths"></p>
-                    Total Cases (<span class="delta" id="cases-inc"></span>):<p class="stat" id="cases"></p>
+                    Total Cases (<span class="delta cases-inc"></span>):<p class="stat" id="cases"></p>
                 </div>
-                <div class="col-sm-3">
+                <div class="contained">
                     <h2>Hospitalized</h2><br>
                     Eligible for a Test:<p class="stat" id="testable"></p>
                     In Hospital:<p class="stat" id="hospital"></p>
                     In ICU:<p class="stat" id="icu"></p>
                     On Ventilator<p class="stat" id="ventilator"></p>
                 </div>
-                <div class="col-sm-3">
+                <div class="contained">
                     <h2>LTCs</h2><br>
                     Total LTC Resident Cases:<p class="stat" id="ltcCases"></p>
                     Total LTC Worker Cases:<p class="stat" id="ltcHcwCases"></p>
@@ -58,14 +59,12 @@
                     Total LTC Worker Deaths:<p class="stat" id="ltcHcwDeaths"></p>
                 </div>
             </div>
-            <hr>
-
         </div> <!-- /container -->
-
     </main>
 
     <footer class="container">
-        <p>Updated every 15 minutes &copy; 2021 Brian Chahley</p>
+        <hr>
+        <small>Updated every 15 minutes &copy; 2021 Brian Chahley</small>
     </footer>
 
     <!-- Bootstrap core JavaScript
@@ -99,7 +98,7 @@
                         $("#deaths").text(todaysData["Deaths"]);
                         $("#deaths-inc").text(Number(todaysData["Deaths"]) - Number(yesterdaysData["Deaths"]));
                         $("#cases").text(todaysData["Total Cases"]);
-                        $("#cases-inc").text(Number(todaysData["Total Cases"]) - Number(yesterdaysData["Total Cases"]));
+                        $(".cases-inc").text(Number(todaysData["Total Cases"]) - Number(yesterdaysData["Total Cases"]));
                         $("#testable").text(todaysData["Total patients approved for testing as of Reporting Date"]);
                         $("#tests").text(todaysData["Total tests completed in the last day"]);
                         $("#percent").text(todaysData["Percent positive tests in last day"] + "%");

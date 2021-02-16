@@ -2,8 +2,8 @@
 
 body {
   color: white;
-  font-size:1.2em;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size:1.3em;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   background-color: rgba(62, 89, 69, 0.736);
 }
 
@@ -12,8 +12,49 @@ body {
   vertical-align: -50%;
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2em;
+    column-gap: 3em;
+    transition: all .2s ease-in;
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+.contained {
+    border: 0.5px dotted white;
+    border-radius: 4px;
+    padding: 0.8em;
+    padding-top: 0.6em;
+
+}
+
+/* .container {
+  max-width:80%;
+  display: flex;
+}
+
+.contained {
+  flex: 0 1 380px;
+  gap:1em;
+  margin: 1em;
+  padding:1.5em;
+  border:0.5px solid white;
+  border-radius:8px;
+} */
+
+.billboard {
+  gap:1em;
+  margin: 1em;
+  padding:1.5em;
+  border:0.5px solid white;
+  border-radius:8px;
+
+}
+
 .stat {
-  color:gold;
+  color:rgb(255, 247, 0);
   font-weight: bold;
 }
 

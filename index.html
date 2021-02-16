@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="./favicon.ico">
+
+    <title>Ontario COVID Data</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="jingle.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <main role="main">
+
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+                <h1 id="title">Ontario COVID Statistics for </h1>
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div>
+                <h2>Yesterday's Numbers:</h2><br>
+                New Cases: <span class="stat" id="cases-inc"></span><br>
+                Tests:<span class="stat" id="tests"></span><br>
+                Percent Positive:<span class="stat" id="percent"></span>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>Cases</h2><br>
+                    Positive Cases (<span class="delta" id="positive-inc"></span>):<p class="stat" id="positive"></p>
+                    Resolved Cases (<span class="delta" id="resolved-inc"></span>):<p class="stat" id="resolved"></p>
+                    Total Deaths (<span class="delta" id="deaths-inc"></span>):<p class="stat" id="deaths"></p>
+                    Total Cases (<span class="delta" id="cases-inc"></span>):<p class="stat" id="cases"></p>
+                </div>
+                <div class="col-sm-3">
+                    <h2>Hospitalized</h2><br>
+                    Eligible for a Test:<p class="stat" id="testable"></p>
+                    In Hospital:<p class="stat" id="hospital"></p>
+                    In ICU:<p class="stat" id="icu"></p>
+                    On Ventilator<p class="stat" id="ventilator"></p>
+                </div>
+                <div class="col-sm-3">
+                    <h2>LTCs</h2><br>
+                    Total LTC Resident Cases:<p class="stat" id="ltcCases"></p>
+                    Total LTC Worker Cases:<p class="stat" id="ltcHcwCases"></p>
+                    Total LTC Resident Deaths:<p class="stat" id="ltcDeaths"></p>
+                    Total LTC Worker Deaths:<p class="stat" id="ltcHcwDeaths"></p>
+                </div>
+            </div>
+            <hr>
+
+        </div> <!-- /container -->
+
+    </main>
+
+    <footer class="container">
+        <p>Updated every 15 minutes &copy; 2021 Brian Chahley</p>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>window.jQuery || document.write('<script src="jquery-3.5.1.min.js"><\/script>')</script>
+    <script src="papaparse.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script>$(document).ready(() => {
+
+            $.ajax({
+                type: "GET",
+                url: "./covidtesting.csv",
+                success: function (data) { parse(data); }
+            });
+
+            function parse(data) {
+                var results = Papa.parse(data, {
+                    header: true,
+                    worker: true,
+                    complete: function (results) {
+                        console.log(results);
+                        var todaysData = results.data[results.data.length - 2];
+                        var yesterdaysData = results.data[results.data.length - 3];
+                        // $("#content").html(JSON.stringify(results.data[results.data.length-2]));
+                        $("#title").append(todaysData["Reported Date"]);
+                        $("#positive").text(todaysData["Confirmed Positive"]);
+                        $("#positive-inc").text(Number(todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"]));
+                        $("#resolved").text(todaysData["Resolved"]);
+                        $("#resolved-inc").text(Number(todaysData["Resolved"]) - Number(yesterdaysData["Resolved"]));
+                        $("#deaths").text(todaysData["Deaths"]);
+                        $("#deaths-inc").text(Number(todaysData["Deaths"]) - Number(yesterdaysData["Deaths"]));
+                        $("#cases").text(todaysData["Total Cases"]);
+                        $("#cases-inc").text(Number(todaysData["Total Cases"]) - Number(yesterdaysData["Total Cases"]));
+                        $("#testable").text(todaysData["Total patients approved for testing as of Reporting Date"]);
+                        $("#tests").text(todaysData["Total tests completed in the last day"]);
+                        $("#percent").text(todaysData["Percent positive tests in last day"] + "%");
+                        $("#hospital").text(todaysData["Number of patients hospitalized with COVID-19"]);
+                        $("#icu").text(todaysData["Number of patients in ICU with COVID-19"]);
+                        $("#ventilator").text(todaysData["Number of patients in ICU on a ventilator with COVID-19"]);
+                        $("#ltcCases").text(todaysData["Total Positive LTC Resident Cases"]);
+                        $("#ltcHcwCases").text(todaysData["Total Positive LTC HCW Cases"]);
+                        $("#ltcDeaths").text(todaysData["Total LTC Resident Deaths"]);
+                        $("#ltcHcwDeaths").text(todaysData["Total LTC HCW Deaths"]);
+                        $(".delta").each(function () {
+                            $(this).addClass(function () { var x = Number(this.innerText) > 0 ? "positive" : "negative"; return x });
+                            if ($(this).hasClass("positive")) { $(this).prepend("+") }
+                        });
+                    }
+                });
+
+            }
+
+        })</script>
+</body>
+
+</html>

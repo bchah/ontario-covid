@@ -1,0 +1,47 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+
+body {
+  color: white;
+  font-size:1.2em;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: rgba(62, 89, 69, 0.736);
+}
+
+#moo {
+  width: 2em;
+  vertical-align: -50%;
+}
+
+.stat {
+  color:gold;
+  font-weight: bold;
+}
+
+.positive {
+color: rgb(31, 195, 31);
+}
+
+.negative {
+color: rgb(184, 0, 0);
+}
+
+.pageMsg {
+  vertical-align: -10%;
+}
+
+.jumbotron {
+  padding-bottom: 1em;
+}
+
+a {
+  color: rgb(215, 195, 195)
+}
+
+a:hover {
+  color: rgb(232, 166, 166)
+}
+
+.jumbotron {
+  padding-top:2em;
+  background-color: rgba(93, 128, 171, 0.736);
+}

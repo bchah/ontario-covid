@@ -27,19 +27,22 @@
         </div>
         <div class="wrapper">
             <div class="contained">
-                <h2>Yesterday's Numbers</h2><br>
+                <h2>Today's Numbers</h2><br>
+                <span class="stat deaths-inc"></span> deaths<br>
                 <span class="stat cases-inc"></span> new cases<br>
+                <span class="stat resolved-inc"></span> resolved cases<br>
                 <span class="stat" id="tests"></span> tests given<br>
                 <span class="stat" id="percent"></span> positivity rate<br>
-                <span class="stat" id="daily-doses"></span> vaccine doses given (<span class="stat" id="daily-partial"></span> inital, <span class="stat" id="daily-final"></span> final)
+                <span class="stat" id="daily-doses"></span> vaccine doses given (<span class="stat"
+                    id="daily-partial"></span> inital, <span class="stat" id="daily-final"></span> final)
             </div>
             <br>
             <div class="grid-container">
                 <div class="contained">
                     <h2>Cases</h2><br>
-                    Positive Cases (<span class="delta" id="positive-inc"></span>):<p class="stat" id="positive"></p>
-                    Resolved Cases (<span class="delta" id="resolved-inc"></span>):<p class="stat" id="resolved"></p>
-                    Total Deaths (<span class="delta" id="deaths-inc"></span>):<p class="stat" id="deaths"></p>
+                    Positive Cases (<span class="delta positive-inc"></span>):<p class="stat" id="positive"></p>
+                    Resolved Cases (<span class="delta resolved-inc"></span>):<p class="stat" id="resolved"></p>
+                    Total Deaths (<span class="delta deaths-inc"></span>):<p class="stat" id="deaths"></p>
                     Total Cases (<span class="delta cases-inc"></span>):<p class="stat" id="cases"></p>
                 </div>
                 <div class="contained">
@@ -68,7 +71,7 @@
 
     <footer class="wrapper">
         <hr>
-        <small>Updates each morning based on the latest available files from <a href="https://data.ontario.ca">data.ontario.ca</a>
+        <small>Viewing the latest available information from <a href="https://data.ontario.ca">data.ontario.ca</a>
             <br>&copy; 2021 Brian Chahley</small>
     </footer>
 
@@ -80,88 +83,98 @@
     <script src="bootstrap.min.js"></script>
     <script>$(document).ready(() => {
 
-        // Add comma separators to numeric string, or return the string if it cant be parsed (already has commas)
-        function fmt(string) {
-            let x = Number(string);
-            if (!isNaN(x))  {
-            return x.toLocaleString() }
-            else { return string }
-        }
+            // Add comma separators to numeric string, or return the string if it cant be parsed (already has commas)
+            function fmt(string) {
+                let x = Number(string);
+                if (!isNaN(x)) {
+                    return x.toLocaleString()
+                }
+                else { return string }
+            }
 
+
+            // Case data
             $.ajax({
-                type: "GET",
-                url: "./covidtesting.csv",
+                type: 'POST',
+                url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
+                cache: true,
+                data: {
+                    resource_id: 'ed270bb8-340b-41f9-a7c6-e8ef587e6d11',
+                    limit: 32000
+                },
+                dataType: "jsonp",
                 success: function (data) {
-                    var results = Papa.parse(data, {
-                        header: true,
-                        worker: true,
-                        complete: function (results) {
-                            // console.log("Case data:" + JSON.stringify(results));
-                            let todaysData = results.data[results.data.length - 2];
-                            let yesterdaysData = results.data[results.data.length - 3];
-                            $("#title").append(todaysData["Reported Date"]);
-                            $("#positive").text(fmt(todaysData["Confirmed Positive"]));
-                            $("#positive-inc").text(Number((todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"])).toLocaleString());
-                            $("#resolved").text(fmt(todaysData["Resolved"]));
-                            $("#resolved-inc").text(Number((todaysData["Resolved"]) - Number(yesterdaysData["Resolved"])).toLocaleString());
-                            $("#deaths").text(fmt(todaysData["Deaths"]));
-                            $("#deaths-inc").text(Number((todaysData["Deaths"]) - Number(yesterdaysData["Deaths"])).toLocaleString());
-                            $("#cases").text(fmt(todaysData["Total Cases"]));
-                            $(".cases-inc").text((Number(todaysData["Total Cases"]) - Number(yesterdaysData["Total Cases"])).toLocaleString());
-                            $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
-                            $("#tests").text(fmt(todaysData["Total tests completed in the last day"]));
-                            $("#percent").text(fmt(todaysData["Percent positive tests in last day"]) + "%");
-                            $("#hospital").text(fmt(todaysData["Number of patients hospitalized with COVID-19"]));
-                            $("#icu").text(fmt(todaysData["Number of patients in ICU with COVID-19"]));
-                            $("#ventilator").text(fmt(todaysData["Number of patients in ICU on a ventilator with COVID-19"]));
-                            $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
-                            $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));
-                            $("#ltcDeaths").text(fmt(todaysData["Total LTC Resident Deaths"]));
-                            $("#ltcHcwDeaths").text(fmt(todaysData["Total LTC HCW Deaths"]));
-                            $(".delta").each(function () {
-                                $(this).addClass(function () { let x = Number(this.innerText) > 0 ? "positive" : "negative"; return x });
-                                if ($(this).hasClass("positive")) { $(this).prepend("+") }
-                            });
-                        }
+
+                    let length = data.result.records.length;
+                    let todaysData = data.result.records[length - 1];
+                    let yesterdaysData = data.result.records[length - 2];
+
+                    $("#title").append(todaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1"));
+                    $("#positive").text(fmt(todaysData["Confirmed Positive"]));
+                    $(".positive-inc").text(Number((todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"])).toLocaleString());
+                    $("#resolved").text(fmt(todaysData["Resolved"]));
+                    $(".resolved-inc").text(Number((todaysData["Resolved"]) - Number(yesterdaysData["Resolved"])).toLocaleString());
+                    $("#deaths").text(fmt(todaysData["Deaths"]));
+                    $(".deaths-inc").text(Number((todaysData["Deaths"]) - Number(yesterdaysData["Deaths"])).toLocaleString());
+                    $("#cases").text(fmt(todaysData["Total Cases"]));
+                    $(".cases-inc").text((Number(todaysData["Total Cases"]) - Number(yesterdaysData["Total Cases"])).toLocaleString());
+                    $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
+                    $("#tests").text(fmt(todaysData["Total tests completed in the last day"]));
+                    $("#percent").text(fmt(todaysData["Percent positive tests in last day"]) + "%");
+                    $("#hospital").text(fmt(todaysData["Number of patients hospitalized with COVID-19"]));
+                    $("#icu").text(fmt(todaysData["Number of patients in ICU with COVID-19"]));
+                    $("#ventilator").text(fmt(todaysData["Number of patients in ICU on a ventilator with COVID-19"]));
+                    $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
+                    $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));
+                    $("#ltcDeaths").text(fmt(todaysData["Total LTC Resident Deaths"]));
+                    $("#ltcHcwDeaths").text(fmt(todaysData["Total LTC HCW Deaths"]));
+                    $(".delta").each(function () {
+                        $(this).addClass(function () { let x = Number(this.innerText.replace(",", "")) > 0 ? "positive" : "negative"; return x });
+                        if ($(this).hasClass("positive")) { $(this).prepend("+") }
                     });
+
+
                 }
             });
 
+            // Vaccine data
             $.ajax({
-                type: "GET",
-                url: "./vaccine_doses.csv",
+                type: 'POST',
+                url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
+                cache: true,
+                data: {
+                    resource_id: '8a89caa9-511c-4568-af89-7f2174b4378c', // Vaccines
+                    limit: 32000
+                },
+                dataType: "jsonp",
                 success: function (data) {
-                    var results = Papa.parse(data, {
-                        header: true,
-                        worker: true,
-                        complete: function (results) {
-                            // console.log("Vaccine data:" + JSON.stringify(results));
-                            let todaysData = results.data[results.data.length - 2];
-                            let yesterdaysData = results.data[results.data.length - 3];
 
-                            let terms = ["previous_day_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
-                            terms.forEach((term)=>{
-                                todaysData[term] = todaysData[term].replace(",","");
-                                yesterdaysData[term] = yesterdaysData[term].replace(",","");
-                            });
+                    let length = data.result.records.length;
+                    let todaysData = data.result.records[length - 1];
+                    let yesterdaysData = data.result.records[length - 2];
 
-                            $("#daily-doses").text(fmt(todaysData["previous_day_doses_administered"]));
-                            $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
-                            $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
-                            let partial_total = (Number(todaysData["total_doses_administered"]) - Number(todaysData["total_individuals_fully_vaccinated"]));
-                            $("#partially-vaccinated").text(partial_total.toLocaleString());
-                            let daily_final = (Number(todaysData["total_individuals_fully_vaccinated"]) - Number(yesterdaysData["total_individuals_fully_vaccinated"]));
-                            $("#daily-final").text(daily_final.toLocaleString());
-                            let daily_partial = (Number(todaysData["previous_day_doses_administered"]) - Number(daily_final));
-                            $("#daily-partial").text(daily_partial.toLocaleString());
-
-
-                        }
+                    let terms = ["previous_day_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
+                    terms.forEach((term) => {
+                        todaysData[term] = todaysData[term].replace(",", "");
+                        yesterdaysData[term] = yesterdaysData[term].replace(",", "");
                     });
+
+                    $("#daily-doses").text(fmt(todaysData["previous_day_doses_administered"]));
+                    $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
+                    $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
+                    let partial_total = (Number(todaysData["total_doses_administered"]) - Number(todaysData["total_individuals_fully_vaccinated"]));
+                    $("#partially-vaccinated").text(partial_total.toLocaleString());
+                    let daily_final = (Number(todaysData["total_individuals_fully_vaccinated"]) - Number(yesterdaysData["total_individuals_fully_vaccinated"]));
+                    $("#daily-final").text(daily_final.toLocaleString());
+                    let daily_partial = (Number(todaysData["previous_day_doses_administered"]) - Number(daily_final));
+                    $("#daily-partial").text(daily_partial.toLocaleString());
+
                 }
             });
 
-        })</script>
+        });
+
+        $("main").fadeIn();</script>
 </body>
 
 </html>

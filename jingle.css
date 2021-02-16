@@ -7,6 +7,10 @@ body {
   background-color: rgba(62, 89, 69, 0.736);
 }
 
+main {
+  display:none;
+}
+
 #moo {
   width: 2em;
   vertical-align: -50%;

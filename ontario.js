@@ -94,10 +94,13 @@ $.ajax({
             complete: function() {
 
                 if (casesInfoDate != vaccineInfoDate) {
-                    $("#subtitle").html(`Case data updated ${casesInfoDate}<br>Vaccine data updated ${vaccineInfoDate}`);
+                    $("#subtitle").html(`Case data last updated ${casesInfoDate}<br>Vaccine data last updated ${vaccineInfoDate}`);
                 } else {
-                    $("#subtitle").html(`Data updated ${casesInfoDate}`);
+                    $("#subtitle").html(`Data last updated ${casesInfoDate}`);
                 }
+
+                var now = Date.now();
+                $("#subtitle").append("<br>Last checked " + new Date(now).toLocaleString());
 
             }
         });

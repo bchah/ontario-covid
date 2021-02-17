@@ -7,6 +7,14 @@ function fmt(string) {
     else { return string }
 }
 
+function num(string) {
+    let x = Number(string);
+    if (!isNaN(x)) {
+        return x.toLocaleString()
+    }
+    else { return Number(string.replace(/[^\d]/g, "")) }
+}
+
 // Global so they can be compared between functions
 var vaccineInfoDate;
 var casesInfoDate;
@@ -26,23 +34,60 @@ $.ajax({
         data = data.result.records;
         let todaysData = data[data.length - 1];
         let yesterdaysData = data[data.length - 2];
+        let twoDaysAgoData = data[data.length - 3];
 
         casesInfoDate = todaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
         $("#positive").text(fmt(todaysData["Confirmed Positive"]));
-        $(".positive-inc").text(Number((todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"])).toLocaleString());
+        $(".positive-new").text(Number((todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"])).toLocaleString());
         $("#resolved").text(fmt(todaysData["Resolved"]));
-        $(".resolved-inc").text(Number((todaysData["Resolved"]) - Number(yesterdaysData["Resolved"])).toLocaleString());
-        $("#deaths").text(fmt(todaysData["Deaths"]));
-        $(".deaths-inc").text(Number((todaysData["Deaths"]) - Number(yesterdaysData["Deaths"])).toLocaleString());
-        $("#cases").text(fmt(todaysData["Total Cases"]));
-        $(".cases-inc").text((Number(todaysData["Total Cases"]) - Number(yesterdaysData["Total Cases"])).toLocaleString());
+        $(".resolved-new").text(Number((todaysData["Resolved"]) - Number(yesterdaysData["Resolved"])).toLocaleString());
+
+        let deaths = Number(todaysData["Deaths"])
+        $("#deaths").text(fmt(deaths));
+
+        let deaths_delta = deaths - Number(yesterdaysData["Deaths"]);
+        $(".deaths-new").text(deaths_delta.toLocaleString());
+
+        let prev_deaths_delta = Number(yesterdaysData["Deaths"]) - Number(twoDaysAgoData["Deaths"]);
+        $(".deaths-delta").text((deaths_delta - prev_deaths_delta).toLocaleString());
+
+        let cases = Number(todaysData["Total Cases"]);
+        $("#cases").text(fmt(cases));
+
+        let cases_delta = (cases - Number(yesterdaysData["Total Cases"]));
+        $(".cases-new").text(cases_delta.toLocaleString());
+
+        let prev_cases_delta = (Number(yesterdaysData["Total Cases"]) - Number(twoDaysAgoData["Total Cases"]));
+        $(".cases-delta").text((cases_delta - prev_cases_delta).toLocaleString());
+
         $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
+
+        let tests_delta = Number(todaysData["Total tests completed in the last day"]) - Number(yesterdaysData["Total tests completed in the last day"]);
+        $(".tests-delta").text(tests_delta.toLocaleString());
+
         $("#tests").text(fmt(todaysData["Total tests completed in the last day"]));
-        $("#percent").text(fmt(todaysData["Percent positive tests in last day"]) + "%");
-        $("#hospital").text(fmt(todaysData["Number of patients hospitalized with COVID-19"]));
-        $("#icu").text(fmt(todaysData["Number of patients in ICU with COVID-19"]));
-        $("#ventilator").text(fmt(todaysData["Number of patients in ICU on a ventilator with COVID-19"]));
+        $("#percent-positive").text(fmt(todaysData["Percent positive tests in last day"]) + "%");
+
+        let fatality_rate = ((deaths/cases)*100);
+        $("#percent-fatal").text(fatality_rate.toFixed(2) + "%");
+
+
+        let hospital = num(todaysData["Number of patients hospitalized with COVID-19"]);
+        let hospital_delta = num(yesterdaysData["Number of patients hospitalized with COVID-19"]);
+        $("#hospital").text(fmt(hospital));
+        $(".hospital-delta").text((hospital - hospital_delta).toLocaleString());
+
+        let icu = num(todaysData["Number of patients in ICU with COVID-19"]);
+        let icu_delta = num(yesterdaysData["Number of patients in ICU with COVID-19"]);
+        $("#icu").text(fmt(icu));
+        $(".icu-delta").text((icu - icu_delta).toLocaleString());
+
+        let vent = num(todaysData["Number of patients in ICU on a ventilator with COVID-19"]);
+        let vent_delta = num(yesterdaysData["Number of patients in ICU on a ventilator with COVID-19"]);
+        $("#ventilator").text(fmt(vent));
+        $(".ventilator-delta").text((vent - vent_delta).toLocaleString());
+
         $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
         $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));
         $("#ltcDeaths").text(fmt(todaysData["Total LTC Resident Deaths"]));
@@ -74,13 +119,14 @@ $.ajax({
 
                 let terms = ["previous_day_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
                 terms.forEach((term) => {
-                    todaysData[term] = todaysData[term].replace(",", "");
-                    yesterdaysData[term] = yesterdaysData[term].replace(",", "");
+                    todaysData[term] = num(todaysData[term]);
+                    yesterdaysData[term] = num(yesterdaysData[term]);
                 });
 
                 vaccineInfoDate = todaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
-                
-                $("#daily-doses").text(fmt(todaysData["previous_day_doses_administered"]));
+
+                let daily_doses = todaysData["previous_day_doses_administered"];
+                $("#daily-doses").text(fmt(daily_doses));
                 $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
                 $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
                 let partial_total = (Number(todaysData["total_doses_administered"]) - Number(todaysData["total_individuals_fully_vaccinated"]));
@@ -91,7 +137,7 @@ $.ajax({
                 $("#daily-partial").text(daily_partial.toLocaleString());
 
             },
-            complete: function() {
+            complete: function () {
 
                 if (casesInfoDate != vaccineInfoDate) {
                     $("#subtitle").html(`Case data last updated ${casesInfoDate}<br>Vaccine data last updated ${vaccineInfoDate}`);

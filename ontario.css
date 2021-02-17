@@ -13,7 +13,7 @@ main {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1em;
     column-gap: 1em;
     transition: all .2s ease-in;
@@ -57,11 +57,11 @@ main {
 }
 
 .positive {
-color: rgb(31, 195, 31);
+color: rgb(59, 218, 59);
 }
 
 .negative {
-color: rgb(184, 0, 0);
+color: rgb(186, 3, 3);
 }
 
 .pageMsg {

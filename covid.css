@@ -11,11 +11,6 @@ main {
   display:none;
 }
 
-#moo {
-  width: 2em;
-  vertical-align: -50%;
-}
-
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -34,8 +29,7 @@ main {
 
 .wrapper {
   margin: auto;
-  /* margin-bottom: 5%;
-  margin-top: 2%; */
+  margin-bottom: 2%;
   max-width: 85%;
   transition: all .2s ease-in;
 }

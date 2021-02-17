@@ -11,10 +11,10 @@ function fmt(string) {
 var vaccineInfoDate;
 var casesInfoDate;
 
-// Case data
+// GET CASE DATA
 $.ajax({
     type: 'POST',
-    url: 'https://data.ontario.ca/en/api/3/action/datastore_search', //Cases
+    url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
     cache: true,
     data: {
         resource_id: 'ed270bb8-340b-41f9-a7c6-e8ef587e6d11',
@@ -29,7 +29,6 @@ $.ajax({
 
         casesInfoDate = todaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
-        $("#title").append(casesInfoDate);
         $("#positive").text(fmt(todaysData["Confirmed Positive"]));
         $(".positive-inc").text(Number((todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"])).toLocaleString());
         $("#resolved").text(fmt(todaysData["Resolved"]));
@@ -56,51 +55,55 @@ $.ajax({
 
     },
     complete: function () {
-        // Get vaccine data
-    $.ajax({
-        type: 'POST',
-        url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
-        cache: true,
-        data: {
-            resource_id: '8a89caa9-511c-4568-af89-7f2174b4378c', // Vaccines
-            limit: 32000
-        },
-        dataType: "jsonp",
-        success: function (data) {
 
-            data = data.result.records;
-            let todaysData = data[data.length - 1];
-            let yesterdaysData = data[data.length - 2];
+        // GET VACCINE DATA
+        $.ajax({
+            type: 'POST',
+            url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
+            cache: true,
+            data: {
+                resource_id: '8a89caa9-511c-4568-af89-7f2174b4378c',
+                limit: 32000
+            },
+            dataType: "jsonp",
+            success: function (data) {
 
-            let terms = ["previous_day_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
-            terms.forEach((term) => {
-                todaysData[term] = todaysData[term].replace(",", "");
-                yesterdaysData[term] = yesterdaysData[term].replace(",", "");
-            });
+                data = data.result.records;
+                let todaysData = data[data.length - 1];
+                let yesterdaysData = data[data.length - 2];
 
-            vaccineInfoDate = todaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
-            if (vaccineInfoDate != casesInfoDate) {
-                $("#vaccineDate").text("Vaccine data is from " + vaccineInfoDate);
+                let terms = ["previous_day_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
+                terms.forEach((term) => {
+                    todaysData[term] = todaysData[term].replace(",", "");
+                    yesterdaysData[term] = yesterdaysData[term].replace(",", "");
+                });
+
+                vaccineInfoDate = todaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
+                
+                $("#daily-doses").text(fmt(todaysData["previous_day_doses_administered"]));
+                $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
+                $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
+                let partial_total = (Number(todaysData["total_doses_administered"]) - Number(todaysData["total_individuals_fully_vaccinated"]));
+                $("#partially-vaccinated").text(partial_total.toLocaleString());
+                let daily_final = (Number(todaysData["total_individuals_fully_vaccinated"]) - Number(yesterdaysData["total_individuals_fully_vaccinated"]));
+                $("#daily-final").text(daily_final.toLocaleString());
+                let daily_partial = (Number(todaysData["previous_day_doses_administered"]) - Number(daily_final));
+                $("#daily-partial").text(daily_partial.toLocaleString());
+
+            },
+            complete: function() {
+
+                if (casesInfoDate != vaccineInfoDate) {
+                    $("#subtitle").html(`Case data updated ${casesInfoDate}<br>Vaccine data updated ${vaccineInfoDate}`);
+                } else {
+                    $("#subtitle").html(`Data updated ${casesInfoDate}`);
+                }
+
             }
-
-            $("#daily-doses").text(fmt(todaysData["previous_day_doses_administered"]));
-            $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
-            $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
-            let partial_total = (Number(todaysData["total_doses_administered"]) - Number(todaysData["total_individuals_fully_vaccinated"]));
-            $("#partially-vaccinated").text(partial_total.toLocaleString());
-            let daily_final = (Number(todaysData["total_individuals_fully_vaccinated"]) - Number(yesterdaysData["total_individuals_fully_vaccinated"]));
-            $("#daily-final").text(daily_final.toLocaleString());
-            let daily_partial = (Number(todaysData["previous_day_doses_administered"]) - Number(daily_final));
-            $("#daily-partial").text(daily_partial.toLocaleString());
-
-        }
-    });
+        });
 
     }
 });
 
-function getVaccineData() {
-    
-}
 // Buys a moment for the API call to complete and also looks nice
 $("main").fadeIn();

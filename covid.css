@@ -2,7 +2,7 @@
 
 body {
   color: white;
-  font-size:1.3em;
+  font-size:1.2em;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   background-color: rgba(62, 89, 69, 0.736);
 }
@@ -13,9 +13,9 @@ main {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2em;
-    column-gap: 3em;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1em;
+    column-gap: 1em;
     transition: all .2s ease-in;
     padding-bottom: 1em;
     padding-top: 1em;

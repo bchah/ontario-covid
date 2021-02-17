@@ -15,12 +15,13 @@
     <main role="main">
         <div class="jumbotron">
             <div class="wrapper">
-               <h1 id="title"><object data="virus.svg" class="logo" type="image/svg+xml"></object> Ontario COVID Data for </h1><br>
+               <h1 id="title"><object data="virus.svg" class="logo" type="image/svg+xml"></object> Ontario COVID Statistics</h1>
+               <small id="subtitle"></small><br><br>
             </div>
         </div>
         <div class="wrapper">
             <div class="contained">
-                <h2>Today's Numbers</h2><br>
+                <h2>Latest Numbers</h2><br>
                 <span class="stat deaths-inc"></span> deaths<br>
                 <span class="stat cases-inc"></span> new cases<br>
                 <span class="stat resolved-inc"></span> resolved cases<br>
@@ -29,7 +30,6 @@
                 <span class="stat" id="daily-doses"></span> vaccine doses given (<span class="stat"
                 id="daily-partial"></span> inital, <span class="stat" id="daily-final"></span> final)
             </div>
-            <br>
             <div class="grid-container">
                 <div class="contained">
                     <h2>Cases</h2><br>
@@ -43,7 +43,6 @@
                     Total Doses Given <p class="stat" id="total-doses"></p>
                     Fully Vaccinated <p class="stat" id="total-vaccinated"></p>
                     Partially Vaccinated <p class="stat" id="partially-vaccinated"></p>
-                    <small id="vaccineDate"></small>
                 </div>
                 <div class="contained">
                     <h2>Treatment</h2><br>

@@ -129,7 +129,7 @@ $.ajax({
                 $("#daily-doses").text(fmt(daily_doses));
                 $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
                 $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
-                let partial_total = (Number(todaysData["total_doses_administered"]) - Number(todaysData["total_individuals_fully_vaccinated"]));
+                let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
                 $("#partially-vaccinated").text(partial_total.toLocaleString());
                 let daily_final = (Number(todaysData["total_individuals_fully_vaccinated"]) - Number(yesterdaysData["total_individuals_fully_vaccinated"]));
                 $("#daily-final").text(daily_final.toLocaleString());

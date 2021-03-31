@@ -69,24 +69,24 @@ $.ajax({
         $("#tests").text(fmt(todaysData["Total tests completed in the last day"]));
         $("#percent-positive").text(fmt(todaysData["Percent positive tests in last day"]) + "%");
 
-        let fatality_rate = ((deaths/cases)*100);
+        let fatality_rate = ((deaths / cases) * 100);
         $("#percent-fatal").text(fatality_rate.toFixed(2) + "%");
 
 
-        let hospital = num(todaysData["Number of patients hospitalized with COVID-19"]);
-        let hospital_delta = num(yesterdaysData["Number of patients hospitalized with COVID-19"]);
+        let hospital = Number(todaysData["Number of patients hospitalized with COVID-19"]);
+        let hospital_delta = Number(yesterdaysData["Number of patients hospitalized with COVID-19"]);
         $("#hospital").text(fmt(hospital));
-        $(".hospital-delta").text((hospital - hospital_delta).toLocaleString());
+        $(".hospital-delta").text(fmt((hospital - hospital_delta)));
 
-        let icu = num(todaysData["Number of patients in ICU with COVID-19"]);
-        let icu_delta = num(yesterdaysData["Number of patients in ICU with COVID-19"]);
+        let icu = Number(todaysData["Number of patients in ICU with COVID-19"]);
+        let icu_delta = Number(yesterdaysData["Number of patients in ICU with COVID-19"]);
         $("#icu").text(fmt(icu));
-        $(".icu-delta").text((icu - icu_delta).toLocaleString());
+        $(".icu-delta").text(fmt((icu - icu_delta)));
 
-        let vent = num(todaysData["Number of patients in ICU on a ventilator with COVID-19"]);
-        let vent_delta = num(yesterdaysData["Number of patients in ICU on a ventilator with COVID-19"]);
+        let vent = Number(todaysData["Number of patients in ICU on a ventilator with COVID-19"]);
+        let vent_delta = Number(yesterdaysData["Number of patients in ICU on a ventilator with COVID-19"]);
         $("#ventilator").text(fmt(vent));
-        $(".ventilator-delta").text((vent - vent_delta).toLocaleString());
+        $(".ventilator-delta").text(fmt(vent - vent_delta));
 
         $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
         $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));

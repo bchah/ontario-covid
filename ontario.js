@@ -78,13 +78,13 @@ $.ajax({
         $("#hospital").text(fmt(hospital));
         $(".hospital-delta").text(fmt((hospital - hospital_delta)));
 
-        let icu = Number(todaysData["Number of patients in ICU with COVID-19"]);
-        let icu_delta = Number(yesterdaysData["Number of patients in ICU with COVID-19"]);
+        let icu = Number(todaysData["Number of patients in ICU due to COVID-19"]);
+        let icu_delta = Number(yesterdaysData["Number of patients in ICU due to COVID-19"]);
         $("#icu").text(fmt(icu));
         $(".icu-delta").text(fmt((icu - icu_delta)));
 
-        let vent = Number(todaysData["Number of patients in ICU on a ventilator with COVID-19"]);
-        let vent_delta = Number(yesterdaysData["Number of patients in ICU on a ventilator with COVID-19"]);
+        let vent = Number(todaysData["Number of patients in ICU on a ventilator due to COVID-19"]);
+        let vent_delta = Number(yesterdaysData["Number of patients in ICU on a ventilator due to COVID-19"]);
         $("#ventilator").text(fmt(vent));
         $(".ventilator-delta").text(fmt(vent - vent_delta));
 

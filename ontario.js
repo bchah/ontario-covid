@@ -140,9 +140,7 @@ $.ajax({
             complete: function () {
 
                 if (casesInfoDate != vaccineInfoDate) {
-                    $("#subtitle").html(`Case data last updated ${casesInfoDate}<br>Vaccine data not available. Similar to their handling of the pandemic, Ontario keeps changing the way this data is sent and breaks this site from time to time. We're working on it now...`);
-
-                    // $("#subtitle").html(`Case data last updated ${casesInfoDate}<br>Vaccine data last updated ${vaccineInfoDate}`);
+                    $("#subtitle").html(`Case data last updated ${casesInfoDate}<br>Vaccine data last updated ${vaccineInfoDate}`);
                 } else {
                     $("#subtitle").html(`Data last updated ${casesInfoDate}`);
                 }

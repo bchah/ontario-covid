@@ -8,9 +8,13 @@ function fmt(string) {
 }
 
 function num(string) {
-    let x = Number(string);
+    if (!Number.isInteger(string)) {
+    var x = Number(string);
+    } else {
+        var x = string;
+    }
     if (!isNaN(x)) {
-        return x.toLocaleString()
+        return x;
     }
     else { return Number(string.replace(/[^\d]/g, "")) }
 }
@@ -131,9 +135,9 @@ $.ajax({
                 $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
                 let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
                 $("#partially-vaccinated").text(partial_total.toLocaleString());
-                let daily_final = (Number(todaysData["total_individuals_fully_vaccinated"]) - Number(yesterdaysData["total_individuals_fully_vaccinated"]));
+                let daily_final = (num(todaysData["total_individuals_fully_vaccinated"]) - num(yesterdaysData["total_individuals_fully_vaccinated"]));
                 $("#daily-final").text(daily_final.toLocaleString());
-                let daily_partial = (Number(todaysData["previous_day_doses_administered"]) - Number(daily_final));
+                let daily_partial = (num(todaysData["previous_day_doses_administered"]) - num(daily_final));
                 $("#daily-partial").text(daily_partial.toLocaleString());
 
             },

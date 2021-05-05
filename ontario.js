@@ -164,13 +164,12 @@ $.ajax({
             complete: function () {
 
                 if (casesInfoDate != vaccineInfoDate) {
-                    $("#subtitle").html(`Case data up to 11:59pm on ${casesInfoDate}<br>Vaccine data as of 12AM on ${vaccineInfoDate}`);
-                } else {
-                    $("#subtitle").html(`Last reported date: ${casesInfoDate}`);
+                    $("#checked").html(`Case and vaccine data come from separate data sources which are not updated at the same time:<br>
+                    Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
                 }
 
                 var now = Date.now();
-                $("#subtitle").html("<br>Last checked " + new Date(now).toLocaleString());
+                $("#checked").html("Last checked " + new Date(now).toLocaleString());
                 $("#today").text(casesInfoDate);
                 $("#yesterday").text(casesYesterday);
 

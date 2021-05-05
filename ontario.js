@@ -62,6 +62,7 @@ $.ajax({
         let twoDaysAgoData = data[data.length - 3];
 
         casesInfoDate = todaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
+        casesYesterday = yesterdaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
         $("#positive").text(fmt(todaysData["Confirmed Positive"]));
         $(".positive-new").text(Number((todaysData["Confirmed Positive"]) - Number(yesterdaysData["Confirmed Positive"])).toLocaleString());
@@ -145,7 +146,8 @@ $.ajax({
                     yesterdaysData[term] = num(yesterdaysData[term]);
                 });
 
-                vaccineInfoDate = todaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
+                // Vaccine dates are marked as of 00:00 on the following day, where cases were for that (prior) day
+                vaccineInfoDate = yesterdaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
                 let daily_doses = todaysData["previous_day_doses_administered"];
                 $("#daily-doses").text(fmt(daily_doses));
@@ -162,13 +164,15 @@ $.ajax({
             complete: function () {
 
                 if (casesInfoDate != vaccineInfoDate) {
-                    $("#subtitle").html(`Case data last updated ${casesInfoDate}<br>Vaccine data last updated ${vaccineInfoDate}`);
+                    $("#subtitle").html(`Case data up to 11:59pm on ${casesInfoDate}<br>Vaccine data as of 12AM on ${vaccineInfoDate}`);
                 } else {
-                    $("#subtitle").html(`Data last updated ${casesInfoDate}`);
+                    $("#subtitle").html(`Last reported date: ${casesInfoDate}`);
                 }
 
                 var now = Date.now();
-                $("#subtitle").append("<br>Last checked " + new Date(now).toLocaleString());
+                $("#subtitle").html("<br>Last checked " + new Date(now).toLocaleString());
+                $("#today").text(casesInfoDate);
+                $("#yesterday").text(casesYesterday);
 
                 $("#openingMessage").hide();
                 $("#theGoods").fadeIn();

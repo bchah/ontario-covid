@@ -9,7 +9,7 @@ function fmt(string) {
 
 function num(string) {
     if (!Number.isInteger(string)) {
-    var x = Number(string);
+        var x = Number(string);
     } else {
         var x = string;
     }
@@ -18,6 +18,27 @@ function num(string) {
     }
     else { return Number(string.replace(/[^\d]/g, "")) }
 }
+
+// Begin the countdown
+var tick = 30;
+var ready = false;
+var timer = setInterval(function () {
+    if (ready) {
+        clearInterval(timer);
+        return true;
+    } else if (tick == 23) {
+        $("#msg").text("The data.ontario.ca server is taking a while to respond... hang tight!")
+    } else if (tick == 12) {
+        $("#msg").html("They might be really busy or updating the data at the moment. Let's wait a <em>little bit</em> longer and see.");
+    } else if (tick == 4) {
+        $("#msg").text("Here, let's try sending the data request again and see what happens...");
+    } else if (tick == 0) {
+        window.location.reload();
+    }
+
+    tick--;
+
+}, 1000);
 
 // Global so they can be compared between functions
 var vaccineInfoDate;
@@ -102,10 +123,7 @@ $.ajax({
             if ($(this).hasClass("positive")) { $(this).prepend("+") }
         });
 
-    },
-    complete: function () {
-
-        // GET VACCINE DATA
+         // GET VACCINE DATA
         $.ajax({
             type: 'POST',
             url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
@@ -152,10 +170,15 @@ $.ajax({
                 var now = Date.now();
                 $("#subtitle").append("<br>Last checked " + new Date(now).toLocaleString());
 
+                $("#openingMessage").hide();
+                $("#theGoods").fadeIn();
+                ready = true;
+
             }
         });
 
-    }
+    },
+    error: function(err){clearInterval(timer); $(".spinner").remove(); $("#msg").html("Sorry, but the data.ontario.ca server is not responding! Please <a href=''>try again</a> in a few minutes.")}
 });
 
 // Buys a moment for the API call to complete and also looks nice

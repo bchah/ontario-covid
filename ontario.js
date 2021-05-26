@@ -87,7 +87,20 @@ $.ajax({
         let prev_cases_delta = (Number(yesterdaysData["Total Cases"]) - Number(twoDaysAgoData["Total Cases"]));
         let pcd_percent = Math.floor((cases_delta - prev_cases_delta) / cases_delta * 100);
 
-        $(".cases-delta").html((cases_delta - prev_cases_delta).toLocaleString() + ` <small>or</small> ${pcd_percent}%`);
+        let changeInCases = (cases_delta - prev_cases_delta).toLocaleString();
+
+        if (pcd_percent > 0) {
+            $(".cases-delta").removeClass("negative");
+            $(".cases-delta").addClass("positive");
+            changeInCases = `+${changeInCases}`;
+        } else {
+            $(".cases-delta").removeClass("positive");
+            $(".cases-delta").addClass("negative");
+        }
+
+       
+
+        $(".cases-delta").html(changeInCases + ` <small>or</small> ${pcd_percent}%`);
 
         $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
 
@@ -122,6 +135,7 @@ $.ajax({
         $("#ltcHcwDeaths").text(fmt(todaysData["Total LTC HCW Deaths"]));
 
         $(".delta").each(function () {
+            if ($(this).hasClass("cases-delta")) { return true }
             $(this).addClass(function () { let x = Number(this.innerText.replace(",", "")) > 0 ? "positive" : "negative"; return x });
             if ($(this).hasClass("positive")) { $(this).prepend("+") }
         });

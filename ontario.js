@@ -85,7 +85,9 @@ $.ajax({
         $(".cases-new").text(cases_delta.toLocaleString());
 
         let prev_cases_delta = (Number(yesterdaysData["Total Cases"]) - Number(twoDaysAgoData["Total Cases"]));
-        $(".cases-delta").text((cases_delta - prev_cases_delta).toLocaleString());
+        let pcd_percent = Math.floor((cases_delta - prev_cases_delta) / cases_delta * 100);
+
+        $(".cases-delta").html((cases_delta - prev_cases_delta).toLocaleString() + ` <small>or</small> ${pcd_percent}%`);
 
         $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
 
@@ -124,7 +126,7 @@ $.ajax({
             if ($(this).hasClass("positive")) { $(this).prepend("+") }
         });
 
-         // GET VACCINE DATA
+        // GET VACCINE DATA
         $.ajax({
             type: 'POST',
             url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
@@ -181,7 +183,7 @@ $.ajax({
         });
 
     },
-    error: function(err){clearInterval(timer); $(".spinner").remove(); $("#msg").html("Sorry, but the data.ontario.ca server is not responding! Please <a href=''>try again</a> in a few minutes.")}
+    error: function (err) { clearInterval(timer); $(".spinner").remove(); $("#msg").html("Sorry, but the data.ontario.ca server is not responding! Please <a href=''>try again</a> in a few minutes.") }
 });
 
 // Buys a moment for the API call to complete and also looks nice

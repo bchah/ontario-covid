@@ -47,12 +47,8 @@ var casesInfoDate;
 // GET CASE DATA
 $.ajax({
     type: 'POST',
-    url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
+    url: 'https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270bb8-340b-41f9-a7c6-e8ef587e6d11&limit=5000',
     cache: true,
-    data: {
-        resource_id: 'ed270bb8-340b-41f9-a7c6-e8ef587e6d11',
-        limit: 32000
-    },
     dataType: "jsonp",
     success: function (data) {
 
@@ -98,7 +94,7 @@ $.ajax({
             $(".cases-delta").addClass("negative");
         }
 
-       
+
 
         $(".cases-delta").html(changeInCases + ` <small>or</small> ${pcd_percent}%`);
 
@@ -143,12 +139,8 @@ $.ajax({
         // GET VACCINE DATA
         $.ajax({
             type: 'POST',
-            url: 'https://data.ontario.ca/en/api/3/action/datastore_search',
+            url: 'https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=8a89caa9-511c-4568-af89-7f2174b4378c&limit=5000',
             cache: true,
-            data: {
-                resource_id: '8a89caa9-511c-4568-af89-7f2174b4378c',
-                limit: 32000
-            },
             dataType: "jsonp",
             success: function (data) {
 
@@ -156,7 +148,7 @@ $.ajax({
                 let todaysData = data[data.length - 1];
                 let yesterdaysData = data[data.length - 2];
 
-                let terms = ["previous_day_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
+                let terms = ["previous_day_total_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
                 terms.forEach((term) => {
                     todaysData[term] = num(todaysData[term]);
                     yesterdaysData[term] = num(yesterdaysData[term]);
@@ -165,7 +157,7 @@ $.ajax({
                 // Vaccine dates are marked as of 00:00 on the following day, where cases were for that (prior) day
                 vaccineInfoDate = yesterdaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
-                let daily_doses = todaysData["previous_day_doses_administered"];
+                let daily_doses = todaysData["previous_day_total_doses_administered"];
                 $("#daily-doses").text(fmt(daily_doses));
                 $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
                 $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
@@ -173,7 +165,7 @@ $.ajax({
                 $("#partially-vaccinated").text(partial_total.toLocaleString());
                 let daily_final = (num(todaysData["total_individuals_fully_vaccinated"]) - num(yesterdaysData["total_individuals_fully_vaccinated"]));
                 $("#daily-final").text(daily_final.toLocaleString());
-                let daily_partial = (num(todaysData["previous_day_doses_administered"]) - num(daily_final));
+                let daily_partial = (num(todaysData["previous_day_total_doses_administered"]) - num(daily_final));
                 $("#daily-partial").text(daily_partial.toLocaleString());
 
             },
@@ -184,8 +176,11 @@ $.ajax({
                     Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
                 }
 
-                var now = Date.now();
-                $("#checked").html("Last checked " + new Date(now).toLocaleString());
+                let now = new Date(Date.now()).toLocaleString();
+                $("#checked").html("Last checked " + now);
+                if (!now.match(casesInfoDate)) {
+                    $("#checked").prepend("Ontario has not yet updated the database for today. ")
+                }
                 $("#today").text(casesInfoDate);
                 $("#yesterday").text(casesYesterday);
 

@@ -57,6 +57,13 @@ $.ajax({
         let yesterdaysData = data[data.length - 2];
         let twoDaysAgoData = data[data.length - 3];
 
+        console.log("Today's Case Data:");
+        console.log(todaysData);
+        console.log("Yesterday's Case Data:");
+        console.log(yesterdaysData);
+        console.log("Two Days Ago's Case Data:");
+        console.log(twoDaysAgoData);
+
         casesInfoDate = todaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
         casesYesterday = yesterdaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
@@ -94,8 +101,6 @@ $.ajax({
             $(".cases-delta").addClass("negative");
         }
 
-
-
         $(".cases-delta").html(changeInCases + ` <small>or</small> ${pcd_percent}%`);
 
         $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
@@ -115,15 +120,25 @@ $.ajax({
         $("#hospital").text(fmt(hospital));
         $(".hospital-delta").text(fmt((hospital - hospital_delta)));
 
-        let icu = Number(todaysData["Number of patients in ICU due to COVID-19"]);
-        let icu_delta = Number(yesterdaysData["Number of patients in ICU due to COVID-19"]);
-        $("#icu").text(fmt(icu));
-        $(".icu-delta").text(fmt((icu - icu_delta)));
+        if (!todaysData["Number of patients in ICU due to COVID-19"]) {
+            $("#icu").text("No Data");
+            $(".icu-delta").text("N/A");
+        } else {
+            let icu = Number(todaysData["Number of patients in ICU due to COVID-19"]);
+            let icu_delta = Number(yesterdaysData["Number of patients in ICU due to COVID-19"]);
+            $("#icu").text(fmt(icu));
+            $(".icu-delta").text(fmt((icu - icu_delta)));
+        }
 
-        let vent = Number(todaysData["Number of patients in ICU on a ventilator due to COVID-19"]);
-        let vent_delta = Number(yesterdaysData["Number of patients in ICU on a ventilator due to COVID-19"]);
-        $("#ventilator").text(fmt(vent));
-        $(".ventilator-delta").text(fmt(vent - vent_delta));
+        if (!todaysData["Number of patients in ICU on a ventilator due to COVID-19"]) {
+            $("#ventilator").text("No Data");
+            $(".ventilator-delta").text("N/A");
+        } else {
+            let vent = Number(todaysData["Number of patients in ICU on a ventilator due to COVID-19"]);
+            let vent_delta = Number(yesterdaysData["Number of patients in ICU on a ventilator due to COVID-19"]);
+            $("#ventilator").text(fmt(vent));
+            $(".ventilator-delta").text(fmt(vent - vent_delta));
+        }
 
         $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
         $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));
@@ -147,6 +162,11 @@ $.ajax({
                 data = data.result.records;
                 let todaysData = data[data.length - 1];
                 let yesterdaysData = data[data.length - 2];
+
+                console.log("Today's Vaccine Data:");
+                console.log(todaysData);
+                console.log("Yesterday's Vaccine Data:");
+                console.log(yesterdaysData);
 
                 let terms = ["previous_day_total_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
                 terms.forEach((term) => {

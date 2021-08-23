@@ -1,3 +1,5 @@
+const debug = true;
+
 // Add comma separators to numeric string, or return the string itself if it cant be parsed (already has commas)
 function fmt(string) {
     let x = Number(string);
@@ -53,16 +55,20 @@ $.ajax({
     success: function (data) {
 
         data = data.result.records;
+
         let todaysData = data[data.length - 1];
         let yesterdaysData = data[data.length - 2];
         let twoDaysAgoData = data[data.length - 3];
 
-        console.log("Today's Case Data:");
-        console.log(todaysData);
-        console.log("Yesterday's Case Data:");
-        console.log(yesterdaysData);
-        console.log("Two Days Ago's Case Data:");
-        console.log(twoDaysAgoData);
+        if (debug) {
+            console.log(data);
+            console.log("Today's Case Data:");
+            console.log(todaysData);
+            console.log("Yesterday's Case Data:");
+            console.log(yesterdaysData);
+            console.log("Two Days Ago's Case Data:");
+            console.log(twoDaysAgoData);
+        }
 
         casesInfoDate = todaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
         casesYesterday = yesterdaysData["Reported Date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
@@ -163,10 +169,12 @@ $.ajax({
                 let todaysData = data[data.length - 1];
                 let yesterdaysData = data[data.length - 2];
 
-                console.log("Today's Vaccine Data:");
-                console.log(todaysData);
-                console.log("Yesterday's Vaccine Data:");
-                console.log(yesterdaysData);
+                if (debug) {
+                    console.log("Today's Vaccine Data:");
+                    console.log(todaysData);
+                    console.log("Yesterday's Vaccine Data:");
+                    console.log(yesterdaysData);
+                }
 
                 let terms = ["previous_day_total_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
                 terms.forEach((term) => {

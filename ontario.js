@@ -46,10 +46,18 @@ var timer = setInterval(function () {
 var vaccineInfoDate;
 var casesInfoDate;
 
+const casesStarted = new Date('02/06/2020');
+const vaccinesStarted = new Date('12/24/2020');
+const today = new Date();
+const casesQueryOffsetMs = today.getTime() - casesStarted.getTime();
+const casesQueryOffset = Math.ceil(casesQueryOffsetMs / (1000 * 3600 * 24)) - 20; // only get a few recent records (with some buffer for error or missing records)
+const vaccineQueryOffsetMs = today.getTime() - vaccinesStarted.getTime();
+const vaccineQueryOffset = Math.ceil(vaccineQueryOffsetMs / (1000 * 3600 * 24)) - 20;
+
 // GET CASE DATA
 $.ajax({
     type: 'POST',
-    url: 'https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270bb8-340b-41f9-a7c6-e8ef587e6d11&limit=5000',
+url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270bb8-340b-41f9-a7c6-e8ef587e6d11&offset=${casesQueryOffset}&limit=5000`,
     cache: true,
     dataType: "jsonp",
     success: function (data) {
@@ -61,6 +69,7 @@ $.ajax({
         let twoDaysAgoData = data[data.length - 3];
 
         if (debug) {
+            console.log("Full Case Data Received:");
             console.log(data);
             console.log("Today's Case Data:");
             console.log(todaysData);
@@ -160,7 +169,7 @@ $.ajax({
         // GET VACCINE DATA
         $.ajax({
             type: 'POST',
-            url: 'https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=8a89caa9-511c-4568-af89-7f2174b4378c&limit=5000',
+            url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=8a89caa9-511c-4568-af89-7f2174b4378c&offset=${vaccineQueryOffset}&limit=5000`,
             cache: true,
             dataType: "jsonp",
             success: function (data) {
@@ -170,6 +179,8 @@ $.ajax({
                 let yesterdaysData = data[data.length - 2];
 
                 if (debug) {
+                    console.log("Full Vaccine Data Received:");
+                    console.log(data);
                     console.log("Today's Vaccine Data:");
                     console.log(todaysData);
                     console.log("Yesterday's Vaccine Data:");

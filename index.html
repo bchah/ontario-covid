@@ -15,7 +15,7 @@
     <main role="main">
         <div class="jumbotron">
             <div class="wrapper">
-               <h1 id="title"><object data="virus.svg" class="logo" type="image/svg+xml"></object> Ontario COVID Statistics</h1>
+               <h1 id="title"><object data="virus.svg" class="logo" type="image/svg+xml"></object> COVID in Ontario</h1>
                <br>
             </div>
         </div>
@@ -26,18 +26,16 @@
         </div></div>
         <div class="wrapper" id="theGoods" style="display:none">
             <div class="contained">
-                <h3>Latest Numbers</h3><br>
-                <!-- <small>AUGUST 23-24 2021: The data from data.ontario.ca is missing yesterday's records so some of the calculations on the page are off. Specifically the red and green deltas. This should self-resolve in a couple of days! </small><br><br>
-                <span class="stat">639</span> new cases<br> -->
-                <span class="stat cases-new"></span> new cases (<span class="delta cases-delta"></span>)<br>
+                <h4>On <span id="yesterday"></span>, Ontario recorded:</h4><br>
+                <span class="stat cases-new"></span> new cases (<span class="delta cases-delta"></span> from previous day)<br>
                 <span class="stat deaths-new"></span> deaths (<span class="delta deaths-delta"></span>)<br>
                 <span class="stat" id="tests"></span> tests given (<span class="delta tests-delta"></span>)<br>
                 <span class="stat resolved-new"></span> resolved cases<br>
                 <span class="stat" id="percent-positive"></span> positivity rate<br>
                 <span class="stat" id="percent-fatal"></span> fatality rate<br>
                 <span class="stat" id="daily-doses"></span> vaccine doses given (<span class="stat"
-                id="daily-partial"></span> inital, <span class="stat" id="daily-final"></span> final)
-                <br><br><small id="checked"></small><br><small><span class="positive">+</span> and <span class="negative">-</span> figures represent change from <span id="yesterday"></span> to <span id="today"></span>.</small><br>
+                id="daily-first"></span> first, <span class="stat" id="daily-second"></span> second, <span class="stat" id="daily-third"></span> third)
+                <br><br><small id="checked"></small><br><small id="published">Data published on <span id="today"></span>.</small>
                 
             </div>
             <div class="grid-container">
@@ -50,9 +48,10 @@
                 </div>
                 <div class="contained">
                     <h3>Vaccines</h3><br>
-                    Total Doses Given <p class="stat" id="total-doses"></p>
-                    Fully Vaccinated <p class="stat" id="total-vaccinated"></p>
-                    First Dose Received <p class="stat" id="partially-vaccinated"></p>
+                    Total Shots Given <p class="stat" id="total-doses"></p>
+                    Triple Vaxxed <p class="stat" id="triple-vaxxed"></p>
+                    Double Vaxxed <p class="stat" id="total-vaccinated"></p>
+                    One Dose Only <p class="stat" id="partially-vaccinated"></p>
                 </div>
                 <div class="contained">
                     <h3>Treatment</h3><br>
@@ -61,13 +60,13 @@
                     In ICU (<span class="delta icu-delta"></span>)<p class="stat" id="icu"></p>
                     On a Ventilator (<span class="delta ventilator-delta"></span>)<p class="stat" id="ventilator"></p>
                 </div>
-                <div class="contained">
+                <!-- <div class="contained">
                     <h3>LTC</h3><br>
                     Total LTC Resident Cases<p class="stat" id="ltcCases"></p>
                     Total LTC Worker Cases<p class="stat" id="ltcHcwCases"></p>
                     Total LTC Resident Deaths<p class="stat" id="ltcDeaths"></p>
                     Total LTC Worker Deaths<p class="stat" id="ltcHcwDeaths"></p>
-                </div>
+                </div> -->
             </div>
         </div>
     </main>

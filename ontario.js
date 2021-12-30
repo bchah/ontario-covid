@@ -189,17 +189,22 @@ $.ajax({
                 $("#daily-doses").text(fmt(daily_doses));
                 $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
                 $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
+                $("#triple-vaxxed").text(fmt(todaysData["total_individuals_3doses"]));
+             
                 let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
                 $("#partially-vaccinated").text(partial_total.toLocaleString());
-                let daily_final = (num(todaysData["total_individuals_fully_vaccinated"]) - num(yesterdaysData["total_individuals_fully_vaccinated"]));
-                $("#daily-final").text(daily_final.toLocaleString());
-                let daily_partial = (num(todaysData["previous_day_total_doses_administered"]) - num(daily_final));
-                $("#daily-partial").text(daily_partial.toLocaleString());
+                let daily_third = (num(todaysData["total_individuals_3doses"]) - num(yesterdaysData["total_individuals_3doses"]));
+                $("#daily-third").text(daily_third.toLocaleString());
+                let daily_second = (num(todaysData["total_individuals_fully_vaccinated"]) - num(yesterdaysData["total_individuals_fully_vaccinated"]));
+                $("#daily-second").text(daily_second.toLocaleString());
+                let daily_first = (num(todaysData["total_individuals_partially_vaccinated"]) - num(yesterdaysData["total_individuals_partially_vaccinated"]));
+                $("#daily-first").text(daily_first.toLocaleString());
 
             },
             complete: function () {
 
                 if (casesInfoDate != vaccineInfoDate) {
+                    $("#published").remove();
                     $("#checked").html(`Case and vaccine data come from separate data sources which are not updated at the same time:<br>
                     Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
                 }
@@ -207,7 +212,7 @@ $.ajax({
                 let now = new Date(Date.now()).toLocaleString();
                 $("#checked").html("Last checked " + now);
                 if (!now.match(casesInfoDate)) {
-                    $("#checked").prepend("Ontario has not yet updated the database for today. ")
+                    $("#checked").append(`<br>Ontario has not updated the public database since <span class='negative'>&nbsp;${casesInfoDate}.</span><br><small>The database is normally updated around 10:00am each morning, except for some weekends and holidays`)
                 }
                 $("#today").text(casesInfoDate);
                 $("#yesterday").text(casesYesterday);

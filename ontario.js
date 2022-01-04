@@ -1,5 +1,9 @@
 const debug = true;
 
+if (window.location.protocol != "https:") { 
+    $("#domainWarning").show();
+}
+
 // Add comma separators to numeric string, or return the string itself if it cant be parsed (already has commas)
 function fmt(string) {
     let x = Number(string);
@@ -155,10 +159,10 @@ url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270
             $(".ventilator-delta").text(fmt(vent - vent_delta));
         }
 
-        $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
-        $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));
-        $("#ltcDeaths").text(fmt(todaysData["Total LTC Resident Deaths"]));
-        $("#ltcHcwDeaths").text(fmt(todaysData["Total LTC HCW Deaths"]));
+        // $("#ltcCases").text(fmt(todaysData["Total Positive LTC Resident Cases"]));
+        // $("#ltcHcwCases").text(fmt(todaysData["Total Positive LTC HCW Cases"]));
+        // $("#ltcDeaths").text(fmt(todaysData["Total LTC Resident Deaths"]));
+        // $("#ltcHcwDeaths").text(fmt(todaysData["Total LTC HCW Deaths"]));
 
         $(".delta").each(function () {
             if ($(this).hasClass("cases-delta")) { return true }

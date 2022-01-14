@@ -1,6 +1,6 @@
 const debug = true;
 
-if (window.location.protocol != "https:") { 
+if (window.location.ancestorOrigins[0] == "http://ontario.boldlygoingnowhere.org") {
     $("#domainWarning").show();
 }
 
@@ -61,7 +61,7 @@ const vaccineQueryOffset = Math.ceil(vaccineQueryOffsetMs / (1000 * 3600 * 24)) 
 // GET CASE DATA
 $.ajax({
     type: 'POST',
-url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270bb8-340b-41f9-a7c6-e8ef587e6d11&offset=${casesQueryOffset}&limit=5000`,
+    url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270bb8-340b-41f9-a7c6-e8ef587e6d11&offset=${casesQueryOffset}&limit=5000`,
     cache: true,
     dataType: "jsonp",
     success: function (data) {
@@ -122,7 +122,8 @@ url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270
 
         $(".cases-delta").html(changeInCases + ` <small>or</small> ${pcd_percent}%`);
 
-        $("#testable").text(fmt(todaysData["Total patients approved for testing as of Reporting Date"]));
+        let population = todaysData["Total patients approved for testing as of Reporting Date"];
+        $("#testable").text(fmt(population));
 
         let tests_delta = Number(todaysData["Total tests completed in the last day"]) - Number(yesterdaysData["Total tests completed in the last day"]);
         $(".tests-delta").text(tests_delta.toLocaleString());
@@ -200,38 +201,47 @@ url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=ed270
                 // Vaccine dates are marked as of 00:00 on the following day, where cases were for that (prior) day
                 vaccineInfoDate = yesterdaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
+                let totalDoses = num(todaysData["total_doses_administered"]);
+                let singleVaxxed = num(todaysData["total_individuals_partially_vaccinated"]);
+                let doubleVaxxed = num(todaysData["total_individuals_fully_vaccinated"]);
+                let tripleVaxxed = num(todaysData["total_individuals_3doses"]);
+                let quadVaxxed = totalDoses - (tripleVaxxed * 3) - ((doubleVaxxed - tripleVaxxed)*2) - singleVaxxed;
+                let totalDoses_y = num(yesterdaysData["total_doses_administered"]);
+                let singleVaxxed_y = num(yesterdaysData["total_individuals_partially_vaccinated"]);
+                let doubleVaxxed_y = num(yesterdaysData["total_individuals_fully_vaccinated"]);
+                let tripleVaxxed_y = num(yesterdaysData["total_individuals_3doses"]);
+
                 let daily_doses = todaysData["previous_day_total_doses_administered"];
                 $("#daily-doses").text(fmt(daily_doses));
-                $("#total-doses").text(fmt(todaysData["total_doses_administered"]));
-                $("#total-vaccinated").text(fmt(todaysData["total_individuals_fully_vaccinated"]));
-                $("#triple-vaxxed").text(fmt(todaysData["total_individuals_3doses"]));
-             
+                $("#total-doses").text(fmt(totalDoses));
+                $("#total-vaccinated").text(fmt(doubleVaxxed));
+                $("#triple-vaxxed").text(fmt(tripleVaxxed));
+                $("#quad-vaxxed").text(fmt(quadVaxxed));
+                $("#unvaccinated").text(fmt(population - quadVaxxed - tripleVaxxed - doubleVaxxed - singleVaxxed));
+
                 let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
                 $("#partially-vaccinated").text(partial_total.toLocaleString());
-                let daily_third = (num(todaysData["total_individuals_3doses"]) - num(yesterdaysData["total_individuals_3doses"]));
+                let daily_third = tripleVaxxed - tripleVaxxed_y;
                 $("#daily-third").text(daily_third.toLocaleString());
-                let daily_second = (num(todaysData["total_individuals_fully_vaccinated"]) - num(yesterdaysData["total_individuals_fully_vaccinated"]));
+                let daily_second = doubleVaxxed - doubleVaxxed_y;
                 $("#daily-second").text(daily_second.toLocaleString());
-                let daily_first = (num(todaysData["total_individuals_partially_vaccinated"]) - num(yesterdaysData["total_individuals_partially_vaccinated"]));
+                let daily_first = singleVaxxed - singleVaxxed_y;
                 $("#daily-first").text(daily_first.toLocaleString());
+                let daily_fourth = daily_doses - daily_third - daily_second - daily_first;
+                $("#daily-fourth").text(daily_fourth.toLocaleString());
 
             },
             complete: function () {
 
                 if (casesInfoDate != vaccineInfoDate) {
-                    $("#published").remove();
                     $("#checked").html(`Case and vaccine data come from separate data sources which are not updated at the same time:<br>
-                    Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
+            Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
                 }
 
                 let now = new Date(Date.now()).toLocaleString();
-                $("#checked").html("Last checked " + now);
-                if (!now.match(casesInfoDate)) {
-                    $("#checked").append(`<br>Ontario has not updated the public database since <span class='negative'>&nbsp;${casesInfoDate}.</span><br><small>The database is normally updated around 10:00am each morning, except for some weekends and holidays`)
-                }
+                $("#checked").html("Last checked " + now + "<br>Latest data published on " + casesInfoDate);
                 $("#today").text(casesInfoDate);
                 $("#yesterday").text(casesYesterday);
-
                 $("#openingMessage").hide();
                 $("#theGoods").fadeIn();
                 ready = true;

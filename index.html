@@ -28,38 +28,42 @@
         <div class="wrapper" id="theGoods" style="display:none">
             <div class="contained">
                 <h4>On <span id="yesterday"></span>, Ontario recorded:</h4><br>
-                <span class="stat cases-new"></span> new cases (<span class="delta cases-delta"></span> from previous day)<br>
+                
                 <span class="stat deaths-new"></span> deaths (<span class="delta deaths-delta"></span>)<br>
-                <span class="stat" id="tests"></span> tests given (<span class="delta tests-delta"></span>)<br>
                 <span class="stat resolved-new"></span> resolved cases<br>
-                <span class="stat" id="percent-positive"></span> positivity rate<br>
                 <span class="stat" id="percent-fatal"></span> fatality rate<br>
                 <span class="stat" id="daily-doses"></span> vaccine doses given (<span class="stat"
-                id="daily-first"></span> first, <span class="stat" id="daily-second"></span> second, <span class="stat" id="daily-third"></span> third)
-                <br><br><small id="checked"></small><br><small id="published">Data published on <span id="today"></span>.</small>
+                id="daily-first"></span> first, <span class="stat" id="daily-second"></span> second, <span class="stat" id="daily-third"></span> third, <span class="stat" id="daily-fourth"></span> fourth)<br>
+               <hr> <span class="stat cases-new"></span> new cases (<span class="delta cases-delta"></span> from previous day)<br>
+                <span class="stat" id="tests"></span> tests given (<span class="delta tests-delta"></span>)<br>
+                <span class="stat" id="percent-positive"></span> positivity rate
+                <br><br><small id="checked"></small>
                 
             </div>
             <div class="grid-container">
                 <div class="contained">
-                    <h3>Cases</h3><br>
-                    Total Positive (<span class="delta positive-new"></span>)<p class="stat" id="positive"></p>
-                    Total Resolved (<span class="delta resolved-new"></span>)<p class="stat" id="resolved"></p>
-                    Total Cases (<span class="delta cases-new"></span>)<p class="stat" id="cases"></p>
-                    Eligible for a Test<p class="stat" id="testable"></p>
-                </div>
-                <div class="contained">
-                    <h3>Vaccines</h3><br>
-                    Total Shots Given <p class="stat" id="total-doses"></p>
-                    Triple Vaxxed <p class="stat" id="triple-vaxxed"></p>
-                    Double Vaxxed <p class="stat" id="total-vaccinated"></p>
-                    One Dose Only <p class="stat" id="partially-vaccinated"></p>
-                </div>
-                <div class="contained">
-                    <h3>Treatment</h3><br>
+                    <h3>Hospitals</h3><br>
                     Total Deaths (<span class="delta deaths-new"></span>)<p class="stat" id="deaths"></p>
                     Currently Hospitalized (<span class="delta hospital-delta"></span>)<p class="stat" id="hospital"></p>
                     In ICU (<span class="delta icu-delta"></span>)<p class="stat" id="icu"></p>
                     On a Ventilator (<span class="delta ventilator-delta"></span>)<p class="stat" id="ventilator"></p>
+                </div>
+                <div class="contained">
+                    <h3>Vaccination Status</h3><br>
+                    Total Shots Given <p class="stat" id="total-doses"></p>
+                    4 Shots <p class="stat" id="quad-vaxxed"></p>
+                    3 Shots <p class="stat" id="triple-vaxxed"></p>
+                    2 Shots <p class="stat" id="total-vaccinated"></p>
+                    1 Shot <p class="stat" id="partially-vaccinated"></p>
+                    Unvaccinated or Ineligible <p class="stat" id="unvaccinated"></p>
+                </div>
+                <div class="contained">
+                    <h3>Case Data</h3><br>
+                    Total Positive (<span class="delta positive-new"></span>)<p class="stat" id="positive"></p>
+                    Total Resolved (<span class="delta resolved-new"></span>)<p class="stat" id="resolved"></p>
+                    Total Cases (<span class="delta cases-new"></span>)<p class="stat" id="cases"></p>
+                    Population<p class="stat" id="testable"></p>
+                    <small>Note: Ontario is now only testing in dire circumstances or for front-line workers.</small>
                 </div>
                 <!-- <div class="contained">
                     <h3>LTC</h3><br>
@@ -75,7 +79,7 @@
     <footer class="wrapper">
         <hr>
         <small>Viewing the latest available information from <a href="https://data.ontario.ca" target="_blank">data.ontario.ca</a><br>
-            Created by Brian Chahley, Updated December 30 2021 - source on <a href="https://github.com/bchah/ontario-covid" target="_blank">GitHub</a><br>
+            Created by Brian Chahley, Updated January 14, 2022 - source on <a href="https://github.com/bchah/ontario-covid" target="_blank">GitHub</a><br>
         Is something broken? <a href='mailto:help@beamwell.com'>Let me know</a></small>
     </footer>
 

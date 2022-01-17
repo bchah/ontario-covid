@@ -206,10 +206,10 @@ $.ajax({
                 let doubleVaxxed = num(todaysData["total_individuals_fully_vaccinated"]);
                 let tripleVaxxed = num(todaysData["total_individuals_3doses"]);
                 let quadVaxxed = totalDoses - (tripleVaxxed * 3) - ((doubleVaxxed - tripleVaxxed)*2) - singleVaxxed;
-                let totalDoses_y = num(yesterdaysData["total_doses_administered"]);
-                let singleVaxxed_y = num(yesterdaysData["total_individuals_partially_vaccinated"]);
-                let doubleVaxxed_y = num(yesterdaysData["total_individuals_fully_vaccinated"]);
-                let tripleVaxxed_y = num(yesterdaysData["total_individuals_3doses"]);
+                // let totalDoses_y = num(yesterdaysData["total_doses_administered"]);
+                // let singleVaxxed_y = num(yesterdaysData["total_individuals_partially_vaccinated"]);
+                // let doubleVaxxed_y = num(yesterdaysData["total_individuals_fully_vaccinated"]);
+                // let tripleVaxxed_y = num(yesterdaysData["total_individuals_3doses"]);
 
                 let daily_doses = todaysData["previous_day_total_doses_administered"];
                 $("#daily-doses").text(fmt(daily_doses));
@@ -221,11 +221,15 @@ $.ajax({
 
                 let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
                 $("#partially-vaccinated").text(partial_total.toLocaleString());
-                let daily_third = tripleVaxxed - tripleVaxxed_y;
+
+                // let daily_third = tripleVaxxed - tripleVaxxed_y;
+                let daily_third = num(todaysData["previous_day_3doses"]);
                 $("#daily-third").text(daily_third.toLocaleString());
-                let daily_second = doubleVaxxed - doubleVaxxed_y;
+                // let daily_second = doubleVaxxed - doubleVaxxed_y;
+                let daily_second = num(todaysData["previous_day_fully_vaccinated"]);
                 $("#daily-second").text(daily_second.toLocaleString());
-                let daily_first = singleVaxxed - singleVaxxed_y;
+                // let daily_first = singleVaxxed - singleVaxxed_y;
+                let daily_first = num(todaysData["previous_day_at_least_one"]);
                 $("#daily-first").text(daily_first.toLocaleString());
                 let daily_fourth = daily_doses - daily_third - daily_second - daily_first;
                 $("#daily-fourth").text(daily_fourth.toLocaleString());

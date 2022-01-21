@@ -100,6 +100,11 @@ $.ajax({
         let prev_deaths_delta = Number(yesterdaysData["Deaths"]) - Number(twoDaysAgoData["Deaths"]);
         $(".deaths-delta").text((deaths_delta - prev_deaths_delta).toLocaleString());
 
+        let deaths_catchup = num(todaysData["deaths_data_cleaning"]);
+        if (deaths_catchup > 0) {
+            $("#deaths-catchup").html(`<small>(${deaths_catchup} of these deaths were previously unreported)</small>`).show();
+        }
+
         let cases = Number(todaysData["Total Cases"]);
         $("#cases").text(fmt(cases));
 

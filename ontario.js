@@ -91,13 +91,13 @@ $.ajax({
         $("#resolved").text(fmt(todaysData["Resolved"]));
         $(".resolved-new").text(Number((todaysData["Resolved"]) - Number(yesterdaysData["Resolved"])).toLocaleString());
 
-        let deaths = Number(todaysData["Deaths"])
+        let deaths = Number(todaysData["Deaths_New_Methodology"])
         $("#deaths").text(fmt(deaths));
 
-        let deaths_delta = deaths - Number(yesterdaysData["Deaths"]);
+        let deaths_delta = deaths - Number(yesterdaysData["Deaths_New_Methodology"]);
         $(".deaths-new").text(deaths_delta.toLocaleString());
 
-        let prev_deaths_delta = Number(yesterdaysData["Deaths"]) - Number(twoDaysAgoData["Deaths"]);
+        let prev_deaths_delta = Number(yesterdaysData["Deaths_New_Methodology"]) - Number(twoDaysAgoData["Deaths_New_Methodology"]);
         $(".deaths-delta").text((deaths_delta - prev_deaths_delta).toLocaleString());
 
         let deaths_catchup = num(todaysData["deaths_data_cleaning"]);
@@ -140,10 +140,10 @@ $.ajax({
         $("#percent-fatal").text(fatality_rate.toFixed(2) + "%");
 
 
-        let hospital = Number(todaysData["Number of patients hospitalized with COVID-19"]);
-        let hospital_delta = Number(yesterdaysData["Number of patients hospitalized with COVID-19"]);
-        $("#hospital").text(fmt(hospital));
-        $(".hospital-delta").text(fmt((hospital - hospital_delta)));
+        // let hospital = Number(todaysData["Number of patients hospitalized with COVID-19"]);
+        // let hospital_delta = Number(yesterdaysData["Number of patients hospitalized with COVID-19"]);
+        // $("#hospital").text(fmt(hospital));
+        // $(".hospital-delta").text(fmt((hospital - hospital_delta)));
 
         if (!todaysData["Number of patients in ICU due to COVID-19"]) {
             $("#icu").text("No Data");

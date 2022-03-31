@@ -140,10 +140,10 @@ $.ajax({
         $("#percent-fatal").text(fatality_rate.toFixed(2) + "%");
 
 
-        // let hospital = Number(todaysData["Number of patients hospitalized with COVID-19"]);
-        // let hospital_delta = Number(yesterdaysData["Number of patients hospitalized with COVID-19"]);
-        // $("#hospital").text(fmt(hospital));
-        // $(".hospital-delta").text(fmt((hospital - hospital_delta)));
+        let hospital = Number(todaysData["Number of patients hospitalized with COVID-19"]);
+        let hospital_delta = Number(yesterdaysData["Number of patients hospitalized with COVID-19"]);
+        $("#hospital").text(fmt(hospital));
+        $(".hospital-delta").text(fmt((hospital - hospital_delta)));
 
         if (!todaysData["Number of patients in ICU due to COVID-19"]) {
             $("#icu").text("No Data");

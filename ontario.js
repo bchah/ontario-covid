@@ -176,87 +176,88 @@ $.ajax({
             if ($(this).hasClass("positive")) { $(this).prepend("+") }
         });
 
-        // GET VACCINE DATA
-        $.ajax({
-            type: 'POST',
-            url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=8a89caa9-511c-4568-af89-7f2174b4378c&offset=${vaccineQueryOffset}&limit=5000`,
-            cache: true,
-            dataType: "jsonp",
-            success: function (data) {
+        // GET VACCINE DATA (NO LONGER PROVIDED AS OF MAY 2022)
+        // $.ajax({
+        //     type: 'POST',
+        //     url: `https://data.ontario.ca/en/api/3/action/datastore_search?resource_id=8a89caa9-511c-4568-af89-7f2174b4378c&offset=${vaccineQueryOffset}&limit=5000`,
+        //     cache: true,
+        //     dataType: "jsonp",
+        //     success: function (data) {
 
-                data = data.result.records;
-                let todaysData = data[data.length - 1];
-                let yesterdaysData = data[data.length - 2];
+        //         data = data.result.records;
+        //         let todaysData = data[data.length - 1];
+        //         let yesterdaysData = data[data.length - 2];
 
-                if (debug) {
-                    console.log("Full Vaccine Data Received:");
-                    console.log(data);
-                    console.log("Today's Vaccine Data:");
-                    console.log(todaysData);
-                    console.log("Yesterday's Vaccine Data:");
-                    console.log(yesterdaysData);
-                }
+        //         if (debug) {
+        //             console.log("Full Vaccine Data Received:");
+        //             console.log(data);
+        //             console.log("Today's Vaccine Data:");
+        //             console.log(todaysData);
+        //             console.log("Yesterday's Vaccine Data:");
+        //             console.log(yesterdaysData);
+        //         }
 
-                let terms = ["previous_day_total_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
-                terms.forEach((term) => {
-                    todaysData[term] = num(todaysData[term]);
-                    yesterdaysData[term] = num(yesterdaysData[term]);
-                });
+        //         let terms = ["previous_day_total_doses_administered", "total_doses_administered", "total_individuals_fully_vaccinated"];
+        //         terms.forEach((term) => {
+        //             todaysData[term] = num(todaysData[term]);
+        //             yesterdaysData[term] = num(yesterdaysData[term]);
+        //         });
 
-                // Vaccine dates are marked as of 00:00 on the following day, where cases were for that (prior) day
-                vaccineInfoDate = yesterdaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
+        //         // Vaccine dates are marked as of 00:00 on the following day, where cases were for that (prior) day
+        //         vaccineInfoDate = yesterdaysData["report_date"].replace(/(\d{4}-\d{2}-\d{2}).*/, "$1");
 
-                let totalDoses = num(todaysData["total_doses_administered"]);
-                let singleVaxxed = num(todaysData["total_individuals_partially_vaccinated"]);
-                let doubleVaxxed = num(todaysData["total_individuals_fully_vaccinated"]);
-                let tripleVaxxed = num(todaysData["total_individuals_3doses"]);
-                let quadVaxxed = totalDoses - (tripleVaxxed * 3) - ((doubleVaxxed - tripleVaxxed)*2) - singleVaxxed;
-                // let totalDoses_y = num(yesterdaysData["total_doses_administered"]);
-                // let singleVaxxed_y = num(yesterdaysData["total_individuals_partially_vaccinated"]);
-                // let doubleVaxxed_y = num(yesterdaysData["total_individuals_fully_vaccinated"]);
-                // let tripleVaxxed_y = num(yesterdaysData["total_individuals_3doses"]);
+        //         let totalDoses = num(todaysData["total_doses_administered"]);
+        //         let singleVaxxed = num(todaysData["total_individuals_partially_vaccinated"]);
+        //         let doubleVaxxed = num(todaysData["total_individuals_fully_vaccinated"]);
+        //         let tripleVaxxed = num(todaysData["total_individuals_3doses"]);
+        //         let quadVaxxed = totalDoses - (tripleVaxxed * 3) - ((doubleVaxxed - tripleVaxxed)*2) - singleVaxxed;
+        //         // let totalDoses_y = num(yesterdaysData["total_doses_administered"]);
+        //         // let singleVaxxed_y = num(yesterdaysData["total_individuals_partially_vaccinated"]);
+        //         // let doubleVaxxed_y = num(yesterdaysData["total_individuals_fully_vaccinated"]);
+        //         // let tripleVaxxed_y = num(yesterdaysData["total_individuals_3doses"]);
 
-                let daily_doses = todaysData["previous_day_total_doses_administered"];
-                $("#daily-doses").text(fmt(daily_doses));
-                $("#total-doses").text(fmt(totalDoses));
-                $("#total-vaccinated").text(fmt(doubleVaxxed));
-                $("#triple-vaxxed").text(fmt(tripleVaxxed));
-                $("#quad-vaxxed").text(fmt(quadVaxxed));
-                $("#unvaccinated").text(fmt(population - quadVaxxed - tripleVaxxed - doubleVaxxed - singleVaxxed));
+        //         let daily_doses = todaysData["previous_day_total_doses_administered"];
+        //         $("#daily-doses").text(fmt(daily_doses));
+        //         $("#total-doses").text(fmt(totalDoses));
+        //         $("#total-vaccinated").text(fmt(doubleVaxxed));
+        //         $("#triple-vaxxed").text(fmt(tripleVaxxed));
+        //         $("#quad-vaxxed").text(fmt(quadVaxxed));
+        //         $("#unvaccinated").text(fmt(population - quadVaxxed - tripleVaxxed - doubleVaxxed - singleVaxxed));
 
-                let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
-                $("#partially-vaccinated").text(partial_total.toLocaleString());
+        //         let partial_total = (Number(todaysData["total_doses_administered"]) - (Number(todaysData["total_individuals_fully_vaccinated"]) * 2));
+        //         $("#partially-vaccinated").text(partial_total.toLocaleString());
 
-                // let daily_third = tripleVaxxed - tripleVaxxed_y;
-                let daily_third = num(todaysData["previous_day_3doses"]);
-                $("#daily-third").text(daily_third.toLocaleString());
-                // let daily_second = doubleVaxxed - doubleVaxxed_y;
-                let daily_second = num(todaysData["previous_day_fully_vaccinated"]);
-                $("#daily-second").text(daily_second.toLocaleString());
-                // let daily_first = singleVaxxed - singleVaxxed_y;
-                let daily_first = num(todaysData["previous_day_at_least_one"]);
-                $("#daily-first").text(daily_first.toLocaleString());
-                let daily_fourth = daily_doses - daily_third - daily_second - daily_first;
-                $("#daily-fourth").text(daily_fourth.toLocaleString());
+        //         // let daily_third = tripleVaxxed - tripleVaxxed_y;
+        //         let daily_third = num(todaysData["previous_day_3doses"]);
+        //         $("#daily-third").text(daily_third.toLocaleString());
+        //         // let daily_second = doubleVaxxed - doubleVaxxed_y;
+        //         let daily_second = num(todaysData["previous_day_fully_vaccinated"]);
+        //         $("#daily-second").text(daily_second.toLocaleString());
+        //         // let daily_first = singleVaxxed - singleVaxxed_y;
+        //         let daily_first = num(todaysData["previous_day_at_least_one"]);
+        //         $("#daily-first").text(daily_first.toLocaleString());
+        //         let daily_fourth = daily_doses - daily_third - daily_second - daily_first;
+        //         $("#daily-fourth").text(daily_fourth.toLocaleString());
 
-            },
-            complete: function () {
+        //     },
+        //     complete: function () {
 
-                if (casesInfoDate != vaccineInfoDate) {
-                    $("#checked").html(`Case and vaccine data come from separate data sources which are not updated at the same time:<br>
-            Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
-                }
+        //         if (casesInfoDate != vaccineInfoDate) {
+        //             $("#checked").html(`Case and vaccine data come from separate data sources which are not updated at the same time:<br>
+        //     Case data is up to 11:59pm on ${casesInfoDate}<br>Vaccine data is up to 12AM on ${vaccineInfoDate}<br>`);
+        //         }
 
-                let now = new Date(Date.now()).toLocaleString();
-                $("#checked").html("Last checked " + now + "<br>Latest data published on " + casesInfoDate);
-                $("#today").text(casesInfoDate);
-                $("#yesterday").text(casesYesterday);
-                $("#openingMessage").hide();
-                $("#theGoods").fadeIn();
-                ready = true;
+        //     }
+        // });
 
-            }
-        });
+
+        let now = new Date(Date.now()).toLocaleString();
+        $("#checked").html("Last checked " + now + "<br>Latest data published on " + casesInfoDate);
+        $("#today").text(casesInfoDate);
+        $("#yesterday").text(casesYesterday);
+        $("#openingMessage").hide();
+        $("#theGoods").fadeIn();
+        ready = true;
 
     },
     error: function (err) { clearInterval(timer); $(".spinner").remove(); $("#msg").html("Sorry, but the data.ontario.ca server is not responding! Please <a href=''>try again</a> in a few minutes.") }
